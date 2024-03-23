@@ -7,6 +7,7 @@ public class DownloadByLinkPageTest extends AbstractTest {
     public static final String CORRECT_URL_1 = "https://img.freepik.com/free-photo/fresh-yellow-daisy-single-flower-close-up-beauty-generated-by-ai_188544-15543.jpg?size=626&ext=jpg&ga=GA1.1.967060102.1711065600&semt=ais";
     public static final String CORRECT_URL_2 = "https://img.freepik.com/free-photo/cute-kitten-sitting-outdoors-looking-at-camera-surrounded-by-snow-generated-by-artificial-intelligence_188544-84910.jpg?size=626&ext=jpg&ga=GA1.1.967060102.1711065600&semt=ais";
     public static final String INCORRECT_URL = "https://github.com/NikaT1/lab3_TPO/tree/master";
+    public static final String EMPTY_URL = "";
 
     @Test
     public void checkCorrectlyDownloadImageByLink() throws InterruptedException {
@@ -20,7 +21,7 @@ public class DownloadByLinkPageTest extends AbstractTest {
     @Test
     public void checkEmptyDownloadImageByLink() throws InterruptedException {
         DownloadByLinkPage downloadByLinkPage = new DownloadByLinkPage(webDriver);
-        downloadByLinkPage.addUrl("");
+        downloadByLinkPage.addUrl(EMPTY_URL);
         downloadByLinkPage.beginDownload();
         waitDownloading(downloadByLinkPage);
         checkIfNotDownloadedWIthErrorPage();

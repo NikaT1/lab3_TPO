@@ -54,6 +54,7 @@ public class MainPage extends Page {
     private final Image image = new Image();
     @Getter
     private final DownloadSettings downloadSettings = new DownloadSettings();
+
     public MainPage(WebDriver driver) {
         super(driver);
         driver.manage()
@@ -140,6 +141,7 @@ public class MainPage extends Page {
         private WebElement albumName;
         @FindBy(xpath = "//*[@id=\"choose-album\"]")
         private WebElement selectAlbum;
+
         public DownloadSettings() {
             PageFactory.initElements(driver, this);
         }
@@ -175,6 +177,7 @@ public class MainPage extends Page {
         private WebElement optimizeInJPGText;
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[2]/div/div/div/div[4]/label")
         private WebElement cover;
+
         public Image() {
             PageFactory.initElements(driver, this);
         }
@@ -217,6 +220,7 @@ public class MainPage extends Page {
         private WebElement withoutInscriptionRadio;
         @Getter
         private final PreviewSize previewSize = new PreviewSize();
+
         public Preview() {
             PageFactory.initElements(driver, this);
         }
@@ -246,6 +250,7 @@ public class MainPage extends Page {
             private WebElement input;
             @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[5]/div[3]/label")
             private WebElement byHeight;
+
             public PreviewSize() {
                 PageFactory.initElements(driver, this);
             }

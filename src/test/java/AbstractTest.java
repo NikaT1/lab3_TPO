@@ -5,7 +5,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import tpo.lab.ConfProperties;
-import tpo.lab.MainPage;
 import tpo.lab.Page;
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -78,11 +77,4 @@ public class AbstractTest {
         webDriver.quit();
     }
 
-    protected void downloadCorrectImage(String imagePath) throws InterruptedException {
-        MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage(imagePath);
-        mainPage.clickOnBeginDownloadButton();
-        waitDownloading(mainPage);
-        checkIfDownloaded();
-    }
 }

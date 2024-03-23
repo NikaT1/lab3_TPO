@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.Objects;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageTest extends AbstractTest {
+
+    private static final String BASE_PATH = "/home/runtic/IdeaProjects/lab3_TPO/";
 
     @Test
     public void oldVersionButton_shouldRedirectToOldPageSuite() {
@@ -80,16 +83,12 @@ public class MainPageTest extends AbstractTest {
     public void androidUpButton_shouldDownloadApp() {
         MainPage mainPage = new MainPage(webDriver);
         File dir = new File(ConfProperties.getProperty("downloadPath"));
-        int before = dir.list().length;
+        int before = Objects.requireNonNull(dir.list()).length;
         mainPage.clickOnAndroidAppButton();
-        int after = dir.list().length;
+        int after = Objects.requireNonNull(dir.list()).length;
         assertEquals((before + 1), after);
     }
 
-    @Test
-    public void toolBarButton_shouldDownloadApp() {
-        //todo
-    }
 
     @Test
     public void downloadButton_shouldRedirectTiMainPage() {
@@ -127,18 +126,13 @@ public class MainPageTest extends AbstractTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    public void restrictionsButton_shouldOpenRestrictionMessage() {
-        //todo
-    }
-
     @ParameterizedTest
     @ValueSource(strings = {
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png",
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.gif",
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.jpeg",
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.bmp",
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.webp",
+            BASE_PATH + "src/test/resources/images/test.png",
+            BASE_PATH + "src/test/resources/images/test.gif",
+            BASE_PATH + "src/test/resources/images/test.jpeg",
+            BASE_PATH + "src/test/resources/images/test.bmp",
+            BASE_PATH + "src/test/resources/images/test.webp",
     })
     protected void downloadCorrectImage(String imagePath) throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
@@ -151,8 +145,8 @@ public class MainPageTest extends AbstractTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/tooBigImage.jpg",
-            "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/wrongExtention.txt"
+            BASE_PATH + "src/test/resources/images/tooBigImage.jpg",
+            BASE_PATH + "src/test/resources/images/wrongExtention.txt"
     })
     public void downloadWrongImage(String imagePath) throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
@@ -185,7 +179,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkCorrectPreviewRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .getPreviewSize()
@@ -200,7 +194,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWrongSizeMoreThan400PreviewRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .getPreviewSize()
@@ -214,7 +208,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWrongRestrictionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .getPreviewSize()
@@ -227,7 +221,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWrongPreviewInscriptionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .clickONInscriptionRadio();
@@ -241,7 +235,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkEmptyPreviewInscriptionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .clickONInscriptionRadio();
@@ -255,7 +249,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWriteSizeOfImageRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .clickOnImageSizeRadio();
@@ -267,7 +261,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWriteFilenameRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .clickOnWriteFileNameRadio();
@@ -279,7 +273,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkWithoutFilenameRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getPreview()
                 .clickOnWithoutInscriptionRation();
@@ -291,7 +285,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkDecreaseTillCorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnDeacreaseTillButton();
@@ -306,7 +300,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkDecreaseTillWrongImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnDeacreaseTillButton();
@@ -320,7 +314,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkDecreaseInBrowserImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnDecreaseInBrowser();
@@ -332,7 +326,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkOptimizeInJpgCorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnOptimizeJPG();
@@ -346,7 +340,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkOptimizeInJpgIncorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnOptimizeJPG();
@@ -360,7 +354,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkPocterOptionImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnCover();
@@ -376,7 +370,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkThatImageAddedToTheWrittenPoster() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         mainPage.getImage()
                 .clickOnCover();
@@ -392,7 +386,7 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkThatImageAddedToTheAlbum() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         String expectedAlbumName = "f";
         mainPage.getDownloadSettings()
@@ -409,13 +403,13 @@ public class MainPageTest extends AbstractTest {
         String imagesXpath = "/html/body/div[2]/main/div/div[5]";
 
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
-        Integer countOfPictures = webDriver.findElement(By.xpath(imagesXpath))
-                                           .findElements(By.className("col-md-3"))
-                                           .size();
+        int countOfPictures = webDriver.findElement(By.xpath(imagesXpath))
+                                       .findElements(By.className("col-md-3"))
+                                       .size();
 
         String addAlbumXpath = "/html/body/div[2]/main/div/div[5]/div[2]/div/div/div/a";
         String[] split = webDriver.getCurrentUrl()
@@ -429,7 +423,7 @@ public class MainPageTest extends AbstractTest {
                  .window((String) (windowHandles.toArray())[1]);
         assertEquals("https://new.fastpic.org/?album_id=" + albumId, webDriver.getCurrentUrl());
         sleep(2000);
-        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
