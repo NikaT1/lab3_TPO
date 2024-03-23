@@ -1,2 +1,4 @@
-package tpo.lab;public class LoginPage {
+package tpo.lab;
+
+public class LoginPage {
 }
