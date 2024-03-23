@@ -1,10 +1,13 @@
 import java.io.File;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import tpo.lab.ConfProperties;
 import tpo.lab.MainPage;
+import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -365,8 +368,6 @@ public class MainPageTest extends AbstractTest {
         waitDownloading(mainPage);
         checkIfDownloaded();
         String xPathToUrl = "//*[@id=\"summary-textarea\"]";
-        System.out.println(webDriver.findElement(By.xpath(xPathToUrl))
-                                    .getAttribute("value"));
         assertTrue(webDriver.findElement(By.xpath(xPathToUrl))
                             .getAttribute("value")
                             .startsWith("https://"));
@@ -401,6 +402,41 @@ public class MainPageTest extends AbstractTest {
         String albumNameXpath = "/html/body/div[2]/main/div/div[1]/div/nav/ol/li[2]/span";
         assertEquals(expectedAlbumName, webDriver.findElement(By.xpath(albumNameXpath))
                                                  .getText());
+    }
+
+    @Test
+    public void checkAddImageToAlbumAfterDownloading() throws InterruptedException {
+        String imagesXpath = "/html/body/div[2]/main/div/div[5]";
+
+        MainPage mainPage = new MainPage(webDriver);
+        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.clickOnBeginDownloadButton();
+        waitDownloading(mainPage);
+        checkIfDownloaded();
+        Integer countOfPictures = webDriver.findElement(By.xpath(imagesXpath))
+                                           .findElements(By.className("col-md-3"))
+                                           .size();
+
+        String addAlbumXpath = "/html/body/div[2]/main/div/div[5]/div[2]/div/div/div/a";
+        String[] split = webDriver.getCurrentUrl()
+                                  .split("/");
+        String albumId = split[split.length - 1];
+        WebElement addImageToAlbum = webDriver.findElement(By.xpath(addAlbumXpath));
+        addImageToAlbum.click();
+        Set<String> windowHandles = webDriver.getWindowHandles();
+
+        webDriver.switchTo()
+                 .window((String) (windowHandles.toArray())[1]);
+        assertEquals("https://new.fastpic.org/?album_id=" + albumId, webDriver.getCurrentUrl());
+        sleep(2000);
+        mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
+        mainPage.clickOnBeginDownloadButton();
+        waitDownloading(mainPage);
+        checkIfDownloaded();
+
+        assertEquals((countOfPictures + 1), webDriver.findElement(By.xpath(imagesXpath))
+                                                     .findElements(By.className("col-md-3"))
+                                                     .size());
     }
 
 
