@@ -63,6 +63,8 @@ public class MainPage extends Page {
     private WebElement hiddenSelectImageButton;
     @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[4]/div/button")
     private WebElement beginDownloadButton;
+    @FindBy(xpath = "//*[@id=\"navbarNavAltMarkup\"]/div[2]/span")
+    private WebElement accountNickname;
     @Getter
     private Preview preview = new Preview();
     @Getter
@@ -142,6 +144,11 @@ public class MainPage extends Page {
     public boolean isFinishedDownloading() {
         return driver.getCurrentUrl().startsWith(ConfProperties.getProperty("albumPage"));
     }
+
+    public String getAccountName() {
+        return accountNickname.getText().strip();
+    }
+
     public class DownloadSettings{
         public DownloadSettings() {
             PageFactory.initElements(driver, this);

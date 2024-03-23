@@ -1,29 +1,61 @@
 package tpo.lab;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-public class LoginPage {
-    private WebDriver driver;
+import java.util.concurrent.TimeUnit;
 
-    public LoginPage(WebDriver driver){
-        this.driver = driver;
+public class LoginPage extends Page {
+
+    public LoginPage(WebDriver driver) {
+        super(driver);
+        driver.manage()
+                .timeouts()
+                .implicitlyWait(10, TimeUnit.SECONDS);
+        PageFactory.initElements(driver, this);
+        goToTheEnterPage(driver);
     }
 
-    private By usernameField = By.name("username");
-    private By passwordField = By.name("password");
-    private By submitButton = By.name("submit");
-    private By createAccButton = By.linkText("Создать аккаунт");
-    private By emailField = By.name("email");
-    private By errorMessage = By.id("alert");
+    public void goToTheEnterPage(WebDriver driver) {
+        driver.get(ConfProperties.getProperty("enterPage"));
+    }
 
-    public MainPage login(String pass, String login) {
-        driver.findElement(usernameField).clear();
-        driver.findElement(passwordField).clear();
-        driver.findElement(usernameField).sendKeys(login);
-        driver.findElement(passwordField).sendKeys(pass);
-        driver.findElement(submitButton).click();
-        return new MainPage(driver);
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[1]/input")
+    private WebElement usernameField;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[2]/input")
+    private WebElement passwordField;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[3]/button")
+    private WebElement submitButton;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/p[1]/a")
+    private WebElement createAccLink;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[1]/input")
+    private WebElement usernameCreateField;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[3]/input")
+    private WebElement passwordCreateField;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[2]/input")
+    private WebElement emailCreateField;
+    @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[4]/button")
+    private WebElement createAccButton;
+
+    public void login(String pass, String login) {
+        usernameField.clear();
+        passwordField.clear();
+        usernameField.sendKeys(login);
+        passwordField.sendKeys(pass);
+        submitButton.click();
+    }
+
+    public void createAccount(String pass, String login, String email) {
+        createAccLink.click();
+        usernameCreateField.clear();
+        passwordCreateField.clear();
+        emailCreateField.clear();
+        usernameCreateField.sendKeys(login);
+        passwordCreateField.sendKeys(pass);
+        emailCreateField.sendKeys(email);
+        createAccButton.click();
     }
 
 }
