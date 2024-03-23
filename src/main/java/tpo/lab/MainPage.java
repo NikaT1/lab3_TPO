@@ -14,8 +14,12 @@ public class MainPage extends Page{
         driver.manage()
               .timeouts()
               .implicitlyWait(10, TimeUnit.SECONDS);
-        driver.get(ConfProperties.getProperty("mainPage"));
+        goToTheMainPage(driver);
         PageFactory.initElements(driver, this);
+    }
+
+    public void goToTheMainPage(WebDriver driver) {
+        driver.get(ConfProperties.getProperty("mainPage"));
     }
 
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[1]/a")
@@ -38,5 +42,24 @@ public class MainPage extends Page{
     public void clickOldVersionButton() {
         oldVersionButton.click();
     }
+    public void clickOnFaqButton(){
+        faqbutton.click();
+    }
+    public void clickOnRuleButton(){
+        ruleseButton.click();
+    }
+    public void clickOnUploaderButton(){
+        uploaderButton.click();
+    }
+    public void clickOnAndroidAppButton(){
+        androidAppButton.click();
+    }
+    public void clickOnFeedBackButton(){
+        feedbackButton.click();
+    }
+    public void clickOnAboutServiceButton(){
+        aboutServiceButton.click();
+    }
+
 
 }
