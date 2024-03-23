@@ -12,22 +12,8 @@ import org.openqa.selenium.support.ui.Select;
 public class MainPage extends Page {
 
 
-    public MainPage(WebDriver driver) {
-        super(driver);
-        driver.manage()
-              .timeouts()
-              .implicitlyWait(10, TimeUnit.SECONDS);
-        goToTheMainPage(driver);
-        PageFactory.initElements(driver, this);
-    }
-
-    public void goToTheMainPage(WebDriver driver) {
-        driver.get(ConfProperties.getProperty("mainPage"));
-    }
-
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[1]/a")
     private WebElement faqbutton;
-
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[2]/a")
     private WebElement aboutServiceButton;
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[3]/a")
@@ -52,7 +38,6 @@ public class MainPage extends Page {
     private WebElement myDownloadsButton;
     @FindBy(xpath = "//*[@id=\"navbarNavAltMarkup\"]/div[2]/a[2]")
     private WebElement enterButton;
-
     @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[5]/button[2]")
     private WebElement restrictionsButton;
     @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[5]/button[1]")
@@ -63,14 +48,21 @@ public class MainPage extends Page {
     private WebElement hiddenSelectImageButton;
     @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[4]/div/button")
     private WebElement beginDownloadButton;
-    @FindBy(xpath = "//*[@id=\"navbarNavAltMarkup\"]/div[2]/span")
-    private WebElement accountNickname;
     @Getter
-    private Preview preview = new Preview();
+    private final Preview preview = new Preview();
     @Getter
-    private Image image = new Image();
+    private final Image image = new Image();
     @Getter
-    private DownloadSettings downloadSettings = new DownloadSettings();
+    private final DownloadSettings downloadSettings = new DownloadSettings();
+
+    public MainPage(WebDriver driver) {
+        super(driver);
+        driver.manage()
+              .timeouts()
+              .implicitlyWait(10, TimeUnit.SECONDS);
+        driver.get(ConfProperties.getProperty("mainPage"));
+        PageFactory.initElements(driver, this);
+    }
 
     public void clickOldVersionButton() {
         oldVersionButton.click();
@@ -141,18 +133,8 @@ public class MainPage extends Page {
         beginDownloadButton.click();
     }
 
-    public boolean isFinishedDownloading() {
-        return driver.getCurrentUrl().startsWith(ConfProperties.getProperty("albumPage"));
-    }
 
-    public String getAccountName() {
-        return accountNickname.getText().strip();
-    }
-
-    public class DownloadSettings{
-        public DownloadSettings() {
-            PageFactory.initElements(driver, this);
-        }
+    public class DownloadSettings {
         @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[2]/div/select")
         private WebElement deleteSettings;
         @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[3]/div/input")
@@ -160,25 +142,29 @@ public class MainPage extends Page {
         @FindBy(xpath = "//*[@id=\"choose-album\"]")
         private WebElement selectAlbum;
 
-        public void addAlbumName(String text){
+        public DownloadSettings() {
+            PageFactory.initElements(driver, this);
+        }
+
+        public void addAlbumName(String text) {
             albumName.sendKeys(text);
         }
-        public void selectDeleteOptionByIndex(Integer index){
+
+        public void selectDeleteOptionByIndex(Integer index) {
             new Select(deleteSettings).selectByIndex(index);
         }
-        public void selectAlbumByIndex(Integer index){
+
+        public void selectAlbumByIndex(Integer index) {
             new Select(selectAlbum).selectByIndex(index);
         }
-        public List<WebElement> getMyAlbums(){
+
+        public List<WebElement> getMyAlbums() {
             return new Select(selectAlbum).getOptions();
         }
 
     }
 
-    public class Image{
-        public Image() {
-            PageFactory.initElements(driver, this);
-        }
+    public class Image {
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[2]/div/div/div/div[1]/label")
         private WebElement decreaseTillButton;
         @FindBy(xpath = "//*[@id=\"orig-resize\"]")
@@ -192,30 +178,36 @@ public class MainPage extends Page {
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[2]/div/div/div/div[4]/label")
         private WebElement cover;
 
-        public void clickOnDeacreaseTillButton(){
-            decreaseTillButton.click();
-        }
-        public void addDeacreaseText(String text){
-            decreaseTillText.sendKeys(text);
-        }
-        public void addOptimiseInJpgText(String text){
-            optimizeInJPGText.sendKeys(text);
-        }
-        public void clickOnDecreaseInBrowser(){
-            decreaseInBrowser.click();
-        }
-        public void clickOnOptimizeJPG(){
-            optimizeInJPG.click();
-        }
-        public void clickOnCover(){
-            cover.click();
-        }
-    }
-    public class Preview {
-        public Preview() {
+        public Image() {
             PageFactory.initElements(driver, this);
         }
 
+        public void clickOnDeacreaseTillButton() {
+            decreaseTillButton.click();
+        }
+
+        public void addDeacreaseText(String text) {
+            decreaseTillText.sendKeys(text);
+        }
+
+        public void addOptimiseInJpgText(String text) {
+            optimizeInJPGText.sendKeys(text);
+        }
+
+        public void clickOnDecreaseInBrowser() {
+            decreaseInBrowser.click();
+        }
+
+        public void clickOnOptimizeJPG() {
+            optimizeInJPG.click();
+        }
+
+        public void clickOnCover() {
+            cover.click();
+        }
+    }
+
+    public class Preview {
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[1]/label")
         private WebElement imageSizeRadio;
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[2]/label")
@@ -227,37 +219,47 @@ public class MainPage extends Page {
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[3]/label")
         private WebElement withoutInscriptionRadio;
         @Getter
-        private PreviewSize previewSize = new PreviewSize();
-        public void clickOnImageSizeRadio(){
+        private final PreviewSize previewSize = new PreviewSize();
+
+        public Preview() {
+            PageFactory.initElements(driver, this);
+        }
+
+        public void clickOnImageSizeRadio() {
             imageSizeRadio.click();
         }
-        public void clickONInscriptionRadio(){
+
+        public void clickONInscriptionRadio() {
             inscriptionRadio.click();
         }
-        public void clickOnWriteFileNameRadio(){
+
+        public void clickOnWriteFileNameRadio() {
             writeFilenameRadio.click();
         }
-        public void clickOnWithoutInscriptionRation(){
+
+        public void clickOnWithoutInscriptionRation() {
             withoutInscriptionRadio.click();
         }
-        public void addInscriptionText(String text){
+
+        public void addInscriptionText(String text) {
             inscriptionRadioText.sendKeys(text);
         }
 
         public class PreviewSize {
-            public PreviewSize() {
-                PageFactory.initElements(driver, this);
-            }
-
             @FindBy(xpath = "//*[@id=\"txt-thumb-size\"]")
             private WebElement input;
             @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[5]/div[3]/label")
             private WebElement byHeight;
 
-            public void changePreviewSize(String newSize){
+            public PreviewSize() {
+                PageFactory.initElements(driver, this);
+            }
+
+            public void changePreviewSize(String newSize) {
                 input.sendKeys(newSize);
             }
-            public void clickOnHeight(){
+
+            public void clickOnHeight() {
                 byHeight.click();
             }
         }
