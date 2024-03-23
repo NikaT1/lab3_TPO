@@ -1,43 +1,14 @@
 import java.io.File;
-import java.util.concurrent.TimeUnit;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 import tpo.lab.ConfProperties;
 import tpo.lab.MainPage;
-import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 
-public class MainPageTest {
-    private static WebDriver webDriver;
-    private final static long MAX_DELAY=10000;
-
-    @BeforeAll
-    public static void initializeWebDriver() {
-        if (ConfProperties.getProperty("driver")
-                          .equals("chrome")) {
-            System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("chromedriver"));
-            webDriver = new ChromeDriver();
-        } else if (ConfProperties.getProperty("driver")
-                                 .equals("firefox")) {
-            System.setProperty("webdriver.chrome.driver", ConfProperties.getProperty("firefoxdriver"));
-            webDriver = new FirefoxDriver();
-        } else {
-            throw new IllegalArgumentException("there is not his driver: " + ConfProperties.getProperty("driver"));
-        }
-        webDriver.manage()
-                 .timeouts()
-                 .implicitlyWait(10, TimeUnit.SECONDS);
-    }
+public class MainPageTest extends AbstractTest {
 
     @Test
     public void oldVersionButton_shouldRedirectToOldPageSuite() {
@@ -131,7 +102,7 @@ public class MainPageTest {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.clickOnDownloadByLinkButton();
         String actual = webDriver.getCurrentUrl();
-        String expected = ConfProperties.getProperty("downloadBuLinkPage");
+        String expected = ConfProperties.getProperty("downloadByLinkPage");
         assertEquals(expected, actual);
     }
 
@@ -166,7 +137,7 @@ public class MainPageTest {
             "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.bmp",
             "/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.webp",
     })
-    public void downloadCorrectImage(String imagePath) throws InterruptedException {
+    protected void downloadCorrectImage(String imagePath) throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage(imagePath);
         mainPage.clickOnBeginDownloadButton();
@@ -174,11 +145,6 @@ public class MainPageTest {
         checkIfDownloaded();
     }
 
-    private static void checkIfDownloaded() {
-        String actual = webDriver.getCurrentUrl();
-        String expected = ConfProperties.getProperty("albumPage");
-        assertTrue(actual.startsWith(expected));
-    }
 
     @ParameterizedTest
     @ValueSource(strings = {
@@ -193,21 +159,6 @@ public class MainPageTest {
         checkIfNotDownloaded();
     }
 
-    private static void checkIfNotDownloaded() {
-        String actual = webDriver.getCurrentUrl();
-        String expected = ConfProperties.getProperty("albumPage");
-        assertFalse(actual.startsWith(expected));
-    }
-
-    private static void waitDownloading(MainPage mainPage) throws InterruptedException {
-        long start = System.currentTimeMillis();
-        while (!mainPage.isFinishedDownloading()){
-            sleep(1000);
-            if(System.currentTimeMillis()-MAX_DELAY>start){
-                break;
-            }
-        }
-    }
 
     @Test
     public void downloadALotOfImages() throws InterruptedException {
@@ -227,158 +178,198 @@ public class MainPageTest {
 //        String expected = ConfProperties.getProperty("albumPage");
 //        assertFalse(actual.startsWith(expected));
     }
+
     @Test
     public void checkCorrectPreviewRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().getPreviewSize().changePreviewSize(String.valueOf(400));
+        mainPage.getPreview()
+                .getPreviewSize()
+                .changePreviewSize(String.valueOf(400));
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
 
     }
+
     //error suite work
     @Test
     public void checkWrongSizeMoreThan400PreviewRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().getPreviewSize().changePreviewSize(String.valueOf(500));
+        mainPage.getPreview()
+                .getPreviewSize()
+                .changePreviewSize(String.valueOf(500));
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfNotDownloaded();
     }
+
     //error suite work
     @Test
     public void checkWrongRestrictionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().getPreviewSize().changePreviewSize("hh");
+        mainPage.getPreview()
+                .getPreviewSize()
+                .changePreviewSize("hh");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfNotDownloaded();
     }
+
     @Test
     public void checkWrongPreviewInscriptionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().clickONInscriptionRadio();
-        mainPage.getPreview().addInscriptionText("kkk");
+        mainPage.getPreview()
+                .clickONInscriptionRadio();
+        mainPage.getPreview()
+                .addInscriptionText("kkk");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkEmptyPreviewInscriptionRestrictions() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().clickONInscriptionRadio();
-        mainPage.getPreview().addInscriptionText("");
+        mainPage.getPreview()
+                .clickONInscriptionRadio();
+        mainPage.getPreview()
+                .addInscriptionText("");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkWriteSizeOfImageRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().clickOnImageSizeRadio();
+        mainPage.getPreview()
+                .clickOnImageSizeRadio();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkWriteFilenameRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().clickOnWriteFileNameRadio();
+        mainPage.getPreview()
+                .clickOnWriteFileNameRadio();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkWithoutFilenameRationPreview() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getPreview().clickOnWithoutInscriptionRation();
+        mainPage.getPreview()
+                .clickOnWithoutInscriptionRation();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkDecreaseTillCorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnDeacreaseTillButton();
-        mainPage.getImage().addDeacreaseText("200");
+        mainPage.getImage()
+                .clickOnDeacreaseTillButton();
+        mainPage.getImage()
+                .addDeacreaseText("200");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     //error suite work
     @Test
     public void checkDecreaseTillWrongImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnDeacreaseTillButton();
-        mainPage.getImage().addDeacreaseText("hh");
+        mainPage.getImage()
+                .clickOnDeacreaseTillButton();
+        mainPage.getImage()
+                .addDeacreaseText("hh");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfNotDownloaded();
     }
+
     @Test
     public void checkDecreaseInBrowserImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnDecreaseInBrowser();
+        mainPage.getImage()
+                .clickOnDecreaseInBrowser();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkOptimizeInJpgCorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnOptimizeJPG();
-        mainPage.getImage().addOptimiseInJpgText("23");
+        mainPage.getImage()
+                .clickOnOptimizeJPG();
+        mainPage.getImage()
+                .addOptimiseInJpgText("23");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkOptimizeInJpgIncorrectImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnOptimizeJPG();
-        mainPage.getImage().addOptimiseInJpgText("hh");
+        mainPage.getImage()
+                .clickOnOptimizeJPG();
+        mainPage.getImage()
+                .addOptimiseInJpgText("hh");
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
     }
+
     @Test
     public void checkPocterOptionImage() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnCover();
+        mainPage.getImage()
+                .clickOnCover();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
-        String xPathToUrl="//*[@id=\"summary-textarea\"]";
-        System.out.println(webDriver.findElement(By.xpath(xPathToUrl)).getAttribute("value"));
-        assertTrue(webDriver.findElement(By.xpath(xPathToUrl)).getAttribute("value").startsWith("https://"));
+        String xPathToUrl = "//*[@id=\"summary-textarea\"]";
+        System.out.println(webDriver.findElement(By.xpath(xPathToUrl))
+                                    .getAttribute("value"));
+        assertTrue(webDriver.findElement(By.xpath(xPathToUrl))
+                            .getAttribute("value")
+                            .startsWith("https://"));
     }
 
     @Test
@@ -386,32 +377,31 @@ public class MainPageTest {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
-        mainPage.getImage().clickOnCover();
+        mainPage.getImage()
+                .clickOnCover();
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
-        String xPathToUrl="//*[@id=\"summary-textarea\"]";
-        assertTrue(webDriver.findElement(By.xpath(xPathToUrl)).getAttribute("value").startsWith("https://"));
+        String xPathToUrl = "//*[@id=\"summary-textarea\"]";
+        assertTrue(webDriver.findElement(By.xpath(xPathToUrl))
+                            .getAttribute("value")
+                            .startsWith("https://"));
     }
+
     @Test
     public void checkThatImageAddedToTheAlbum() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
         mainPage.selectImage("/home/runtic/IdeaProjects/lab3_TPO/src/test/resources/images/test.png");
         mainPage.clickOnSettingsButton();
         String expectedAlbumName = "f";
-        mainPage.getDownloadSettings().addAlbumName(expectedAlbumName);
+        mainPage.getDownloadSettings()
+                .addAlbumName(expectedAlbumName);
         waitDownloading(mainPage);
         checkIfDownloaded();
-        String albumNameXpath="/html/body/div[2]/main/div/div[1]/div/nav/ol/li[2]/span";
-        assertEquals(expectedAlbumName,webDriver.findElement(By.xpath(albumNameXpath)).getText());
+        String albumNameXpath = "/html/body/div[2]/main/div/div[1]/div/nav/ol/li[2]/span";
+        assertEquals(expectedAlbumName, webDriver.findElement(By.xpath(albumNameXpath))
+                                                 .getText());
     }
 
 
-
-
-
-    @AfterAll
-    public static void closeDriver() {
-//        webDriver.quit();
-    }
 }
