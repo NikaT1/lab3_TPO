@@ -1,4 +1,9 @@
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
@@ -8,6 +13,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import tpo.lab.ConfProperties;
 import tpo.lab.MainPage;
+import tpo.lab.MyDownloadsPage;
+
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -401,39 +408,41 @@ public class MainPageTest extends AbstractTest {
     }
 
     @Test
-    public void checkAddImageToAlbumAfterDownloading() throws InterruptedException {
-        String imagesXpath = "/html/body/div[2]/main/div/div[5]";
-
+    public void checkAddImageToAlbumAfterDownloading() throws InterruptedException, IOException, UnsupportedFlavorException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
+        File file = new File("src/test/resources/images/test.png");
+        mainPage.selectImage(file.getAbsolutePath());
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
-        int countOfPictures = webDriver.findElement(By.xpath(imagesXpath))
-                                       .findElements(By.className("col-md-3"))
-                                       .size();
 
-        String addAlbumXpath = "/html/body/div[2]/main/div/div[5]/div[2]/div/div/div/a";
-        String[] split = webDriver.getCurrentUrl()
-                                  .split("/");
-        String albumId = split[split.length - 1];
-        WebElement addImageToAlbum = webDriver.findElement(By.xpath(addAlbumXpath));
-        addImageToAlbum.click();
-        Set<String> windowHandles = webDriver.getWindowHandles();
-
-        webDriver.switchTo()
-                 .window((String) (windowHandles.toArray())[1]);
-        assertEquals("https://new.fastpic.org/?album_id=" + albumId, webDriver.getCurrentUrl());
+        MyDownloadsPage myDownloadsPage = new MyDownloadsPage(webDriver);
+        myDownloadsPage.copyLinkFirstAlbum();
+        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        String albumLink = (String) c.getData(DataFlavor.stringFlavor);
+        myDownloadsPage.openFirstAlbum();
+        int countOfPictures = myDownloadsPage.getCountOfImagesInAlbum();
+        myDownloadsPage.addImageToAlbum();
         sleep(2000);
-        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
+
+        Set<String> windowHandles = webDriver.getWindowHandles();
+        webDriver.switchTo()
+                .window((String) (windowHandles.toArray())[1]);
+        //assertEquals("https://new.fastpic.org/?album_id=" + albumLink.substring(5), webDriver.getCurrentUrl());
+        file = new File("src/test/resources/images/test.png");
+        mainPage.selectImage(file.getAbsolutePath());
         mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
 
-        assertEquals((countOfPictures + 1), webDriver.findElement(By.xpath(imagesXpath))
-                                                     .findElements(By.className("col-md-3"))
-                                                     .size());
+        myDownloadsPage.goToTheDownloadsPage(webDriver);
+        myDownloadsPage.openFirstAlbum();
+        sleep(2000);
+
+        assertEquals((countOfPictures + 1), myDownloadsPage.getCountOfImagesInAlbum());
     }
+
+
 
 
 }
