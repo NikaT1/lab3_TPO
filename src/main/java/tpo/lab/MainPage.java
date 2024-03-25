@@ -12,6 +12,12 @@ import org.openqa.selenium.support.ui.Select;
 public class MainPage extends Page {
 
 
+    @Getter
+    private final Preview preview = new Preview();
+    @Getter
+    private final Image image = new Image();
+    @Getter
+    private final DownloadSettings downloadSettings = new DownloadSettings();
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[1]/a")
     private WebElement faqbutton;
     @FindBy(xpath = "/html/body/div[2]/footer/div/ul/li[2]/a")
@@ -48,12 +54,6 @@ public class MainPage extends Page {
     private WebElement hiddenSelectImageButton;
     @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[4]/div/button")
     private WebElement beginDownloadButton;
-    @Getter
-    private final Preview preview = new Preview();
-    @Getter
-    private final Image image = new Image();
-    @Getter
-    private final DownloadSettings downloadSettings = new DownloadSettings();
 
     public MainPage(WebDriver driver) {
         super(driver);
@@ -207,6 +207,8 @@ public class MainPage extends Page {
     }
 
     public class Preview {
+        @Getter
+        private final PreviewSize previewSize = new PreviewSize();
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[1]/label")
         private WebElement imageSizeRadio;
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[2]/label")
@@ -217,8 +219,6 @@ public class MainPage extends Page {
         private WebElement writeFilenameRadio;
         @FindBy(xpath = "//*[@id=\"collapseSettings\"]/div[1]/div/div/div/div[3]/label")
         private WebElement withoutInscriptionRadio;
-        @Getter
-        private final PreviewSize previewSize = new PreviewSize();
 
         public Preview() {
             PageFactory.initElements(driver, this);

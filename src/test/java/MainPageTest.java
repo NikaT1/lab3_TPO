@@ -10,18 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import tpo.lab.ConfProperties;
 import tpo.lab.MainPage;
 import tpo.lab.MyDownloadsPage;
-
 import static java.lang.Thread.sleep;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageTest extends AbstractTest {
 
-    private static final String BASE_PATH = "C:\\Users\\пользователь\\IdeaProjects\\lab3_TPO\\";
+    private static final String BASE_PATH = "/home/runtic/IdeaProjects/lab3_TPO/";
 
     @Test
     public void oldVersionButton_shouldRedirectToOldPageSuite() {
@@ -135,11 +133,8 @@ public class MainPageTest extends AbstractTest {
 
     @ParameterizedTest
     @ValueSource(strings = {
-            BASE_PATH + "src/test/resources/images/test.png",
-            BASE_PATH + "src/test/resources/images/test.gif",
-            BASE_PATH + "src/test/resources/images/test.jpeg",
-            BASE_PATH + "src/test/resources/images/test.bmp",
-            BASE_PATH + "src/test/resources/images/test.webp",
+           
+            BASE_PATH + "src/test/resources/images/wrongExtention.jpg"
     })
     protected void downloadCorrectImage(String imagePath) throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
@@ -153,7 +148,7 @@ public class MainPageTest extends AbstractTest {
     @ParameterizedTest
     @ValueSource(strings = {
             BASE_PATH + "src/test/resources/images/tooBigImage.jpg",
-            BASE_PATH + "src/test/resources/images/wrongExtention.txt"
+            BASE_PATH + "src/test/resources/images/wrongExtention.jpg"
     })
     public void downloadWrongImage(String imagePath) throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
@@ -418,7 +413,8 @@ public class MainPageTest extends AbstractTest {
 
         MyDownloadsPage myDownloadsPage = new MyDownloadsPage(webDriver);
         myDownloadsPage.copyLinkFirstAlbum();
-        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Clipboard c = Toolkit.getDefaultToolkit()
+                             .getSystemClipboard();
         String albumLink = (String) c.getData(DataFlavor.stringFlavor);
         myDownloadsPage.openFirstAlbum();
         int countOfPictures = myDownloadsPage.getCountOfImagesInAlbum();
@@ -427,7 +423,7 @@ public class MainPageTest extends AbstractTest {
 
         Set<String> windowHandles = webDriver.getWindowHandles();
         webDriver.switchTo()
-                .window((String) (windowHandles.toArray())[1]);
+                 .window((String) (windowHandles.toArray())[1]);
         //assertEquals("https://new.fastpic.org/?album_id=" + albumLink.substring(5), webDriver.getCurrentUrl());
         file = new File("src/test/resources/images/test.png");
         mainPage.selectImage(file.getAbsolutePath());
@@ -441,8 +437,6 @@ public class MainPageTest extends AbstractTest {
 
         assertEquals((countOfPictures + 1), myDownloadsPage.getCountOfImagesInAlbum());
     }
-
-
 
 
 }

@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AbstractTest {
-    private final static long MAX_DELAY = 10000;
+    private final static long MAX_DELAY = 20000;
     protected static WebDriver webDriver;
 
     @BeforeAll

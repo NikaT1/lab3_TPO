@@ -1,28 +1,13 @@
 package tpo.lab;
 
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 public class MyDownloadsPage extends Page {
-
-    public MyDownloadsPage(WebDriver driver) {
-        super(driver);
-        driver.manage()
-                .timeouts()
-                .implicitlyWait(10, TimeUnit.SECONDS);
-        PageFactory.initElements(driver, this);
-        goToTheDownloadsPage(driver);
-    }
-
-    public void goToTheDownloadsPage(WebDriver driver) {
-        driver.get(ConfProperties.getProperty("myDownloadsPage"));
-    }
 
     @FindBy(xpath = "/html/body/div[2]/main/div/div[2]/div[1]/div/div[2]/div[1]")
     private WebElement firstAlbumField;
@@ -50,10 +35,22 @@ public class MyDownloadsPage extends Page {
     private WebElement openAllImagesButton;
     @FindBy(xpath = "//*[@id=\"dropdownMenuLink\"]")
     private WebElement openAlbumMenuButton;
+    public MyDownloadsPage(WebDriver driver) {
+        super(driver);
+        driver.manage()
+              .timeouts()
+              .implicitlyWait(10, TimeUnit.SECONDS);
+        PageFactory.initElements(driver, this);
+        goToTheDownloadsPage(driver);
+    }
 
+    public void goToTheDownloadsPage(WebDriver driver) {
+        driver.get(ConfProperties.getProperty("myDownloadsPage"));
+    }
 
     public String getFirstAlbumName() {
-        return firstAlbumField.getText().strip();
+        return firstAlbumField.getText()
+                              .strip();
     }
 
     public void deleteFirstAlbum() {
@@ -93,7 +90,8 @@ public class MyDownloadsPage extends Page {
     }
 
     public int getCountOfImagesInAlbum() {
-        return driver.findElements(By.xpath("/html/body/div[2]/main/div/div[5]/div")).size() - 1;
+        return driver.findElements(By.xpath("/html/body/div[2]/main/div/div[5]/div"))
+                     .size() - 1;
     }
 
 }

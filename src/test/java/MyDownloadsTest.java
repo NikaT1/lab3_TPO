@@ -1,19 +1,16 @@
-
-import org.junit.jupiter.api.Test;
-import tpo.lab.ConfProperties;
-import tpo.lab.LoginPage;
-import tpo.lab.MainPage;
-import tpo.lab.MyDownloadsPage;
-
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.File;
 import java.io.IOException;
-
+import org.junit.jupiter.api.Test;
+import tpo.lab.ConfProperties;
+import tpo.lab.LoginPage;
+import tpo.lab.MainPage;
+import tpo.lab.MyDownloadsPage;
 import static java.lang.Thread.sleep;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyDownloadsTest extends AbstractTest {
     private static final String TEST_IMAGE = "src\\test\\resources\\images\\test.png";
@@ -87,7 +84,8 @@ public class MyDownloadsTest extends AbstractTest {
         MyDownloadsPage myDownloadsPage = new MyDownloadsPage(webDriver);
         myDownloadsPage.copyLinkFirstAlbum();
         myDownloadsPage.openFirstAlbum();
-        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Clipboard c = Toolkit.getDefaultToolkit()
+                             .getSystemClipboard();
         assertEquals(webDriver.getCurrentUrl(), "https://new.fastpic.org" + c.getData(DataFlavor.stringFlavor));
     }
 
@@ -116,7 +114,8 @@ public class MyDownloadsTest extends AbstractTest {
         waitDownloading(mainPage);
         checkIfDownloaded();
         myDownloadsPage.copyImageCodes();
-        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Clipboard c = Toolkit.getDefaultToolkit()
+                             .getSystemClipboard();
         String initCodes = (String) c.getData(DataFlavor.stringFlavor);
 
         myDownloadsPage.goToTheDownloadsPage(webDriver);
@@ -161,7 +160,8 @@ public class MyDownloadsTest extends AbstractTest {
         waitDownloading(mainPage);
         checkIfDownloaded();
         myDownloadsPage.copyImageCodes();
-        Clipboard c = Toolkit.getDefaultToolkit().getSystemClipboard();
+        Clipboard c = Toolkit.getDefaultToolkit()
+                             .getSystemClipboard();
         String initCodes = (String) c.getData(DataFlavor.stringFlavor);
 
         file = new File(TEST_IMAGE2);

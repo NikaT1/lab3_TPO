@@ -220,8 +220,8 @@ public class DownloadByLinkPageTest extends AbstractTest {
         checkIfDownloaded();
         String imagesXpath = "/html/body/div[2]/main/div/div[5]";
         assertNotEquals(31, webDriver.findElement(By.xpath(imagesXpath))
-                                  .findElements(By.className("col-md-3"))
-                                  .size());
+                                     .findElements(By.className("col-md-3"))
+                                     .size());
     }
 
 

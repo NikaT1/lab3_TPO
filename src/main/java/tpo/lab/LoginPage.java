@@ -1,27 +1,12 @@
 package tpo.lab;
 
-import org.openqa.selenium.By;
+import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-import java.util.concurrent.TimeUnit;
-
 public class LoginPage extends Page {
-
-    public LoginPage(WebDriver driver) {
-        super(driver);
-        driver.manage()
-                .timeouts()
-                .implicitlyWait(10, TimeUnit.SECONDS);
-        PageFactory.initElements(driver, this);
-        goToTheEnterPage(driver);
-    }
-
-    public void goToTheEnterPage(WebDriver driver) {
-        driver.get(ConfProperties.getProperty("enterPage"));
-    }
 
     @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[1]/input")
     private WebElement usernameField;
@@ -47,6 +32,7 @@ public class LoginPage extends Page {
     private WebElement createAccButton;
     @FindBy(xpath = "//*[@id=\"navbarNavAltMarkup\"]/div[2]/span")
     private WebElement accountNickname;
+
     @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[2]/div[2]/h6")
     private WebElement errorMessageLogin;
     @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[1]/div[2]")
@@ -59,6 +45,18 @@ public class LoginPage extends Page {
     private WebElement passwordRecoverySuccessMessage;
     @FindBy(xpath = "/html/body/div[2]/main/div/div/article/form/div[1]/div[2]")
     private WebElement errorMessagePasswordRecovery;
+    public LoginPage(WebDriver driver) {
+        super(driver);
+        driver.manage()
+              .timeouts()
+              .implicitlyWait(10, TimeUnit.SECONDS);
+        PageFactory.initElements(driver, this);
+        goToTheEnterPage(driver);
+    }
+
+    public void goToTheEnterPage(WebDriver driver) {
+        driver.get(ConfProperties.getProperty("enterPage"));
+    }
 
     public void login(String pass, String login) {
         usernameField.clear();
@@ -91,11 +89,13 @@ public class LoginPage extends Page {
     }
 
     public String getAccountName() {
-        return accountNickname.getText().strip();
+        return accountNickname.getText()
+                              .strip();
     }
 
     public boolean isSuccessLogin(String name) {
-        return driver.getCurrentUrl().equals(ConfProperties.getProperty("mainPage")) && getAccountName().equals(name);
+        return driver.getCurrentUrl()
+                     .equals(ConfProperties.getProperty("mainPage")) && getAccountName().equals(name);
     }
 
     public String getErrorMessageLogin() {
@@ -114,7 +114,9 @@ public class LoginPage extends Page {
         return errorMessagePasswordRecovery.getText();
     }
 
-    public boolean isPasswordRecoverySuccess(){
-        return passwordRecoverySuccessMessage.getText().strip().equals("Успешно!");
+    public boolean isPasswordRecoverySuccess() {
+        return passwordRecoverySuccessMessage.getText()
+                                             .strip()
+                                             .equals("Успешно!");
     }
 }
