@@ -133,7 +133,6 @@ public class MainPage extends Page {
         beginDownloadButton.click();
     }
 
-
     public class DownloadSettings {
         @FindBy(xpath = "/html/body/div[2]/main/div/section/div/div[2]/div/select")
         private WebElement deleteSettings;

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MainPageTest extends AbstractTest {
 
-    private static final String BASE_PATH = "/home/runtic/IdeaProjects/lab3_TPO/";
+    private static final String BASE_PATH = "C:\\Users\\пользователь\\IdeaProjects\\lab3_TPO\\";
 
     @Test
     public void oldVersionButton_shouldRedirectToOldPageSuite() {
@@ -386,11 +386,13 @@ public class MainPageTest extends AbstractTest {
     @Test
     public void checkThatImageAddedToTheAlbum() throws InterruptedException {
         MainPage mainPage = new MainPage(webDriver);
-        mainPage.selectImage(BASE_PATH + "src/test/resources/images/test.png");
+        File file = new File(BASE_PATH + "src\\test\\resources\\images\\test.png");
+        mainPage.selectImage(file.getAbsolutePath());
         mainPage.clickOnSettingsButton();
         String expectedAlbumName = "f";
         mainPage.getDownloadSettings()
                 .addAlbumName(expectedAlbumName);
+        mainPage.clickOnBeginDownloadButton();
         waitDownloading(mainPage);
         checkIfDownloaded();
         String albumNameXpath = "/html/body/div[2]/main/div/div[1]/div/nav/ol/li[2]/span";
