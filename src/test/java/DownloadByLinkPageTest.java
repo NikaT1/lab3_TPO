@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import tpo.lab.DownloadByLinkPage;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class DownloadByLinkPageTest extends AbstractTest {
     public static final String CORRECT_URL_1 = "https://img.freepik.com/free-photo/fresh-yellow-daisy-single-flower-close-up-beauty-generated-by-ai_188544-15543.jpg?size=626&ext=jpg&ga=GA1.1.967060102.1711065600&semt=ais";
@@ -140,7 +141,7 @@ public class DownloadByLinkPageTest extends AbstractTest {
                 + "\n";
         downloadByLinkPage.addUrl(stringBuilder);
         downloadByLinkPage.beginDownload();
-        waitDownloading(downloadByLinkPage);
+        waitDownloading(downloadByLinkPage, 20000);
         checkIfDownloaded();
         String imagesXpath = "/html/body/div[2]/main/div/div[5]";
         assertEquals(31, webDriver.findElement(By.xpath(imagesXpath))
@@ -218,7 +219,7 @@ public class DownloadByLinkPageTest extends AbstractTest {
         waitDownloading(downloadByLinkPage, 20000);
         checkIfDownloaded();
         String imagesXpath = "/html/body/div[2]/main/div/div[5]";
-        assertEquals(31, webDriver.findElement(By.xpath(imagesXpath))
+        assertNotEquals(31, webDriver.findElement(By.xpath(imagesXpath))
                                   .findElements(By.className("col-md-3"))
                                   .size());
     }

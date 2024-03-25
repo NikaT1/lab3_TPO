@@ -52,9 +52,6 @@ public class MyDownloadsPage extends Page {
     private WebElement openAlbumMenuButton;
 
 
-    private List<WebElement> allBlocksOfAlbum = driver.findElements(By.xpath("/html/body/div[2]/main/div/div[5]/div"));
-
-
     public String getFirstAlbumName() {
         return firstAlbumField.getText().strip();
     }
@@ -96,7 +93,7 @@ public class MyDownloadsPage extends Page {
     }
 
     public int getCountOfImagesInAlbum() {
-        return allBlocksOfAlbum.size() - 1;
+        return driver.findElements(By.xpath("/html/body/div[2]/main/div/div[5]/div")).size() - 1;
     }
 
 }
